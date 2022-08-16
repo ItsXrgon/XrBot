@@ -78,10 +78,3 @@ class MiniCommands(commands.Cog):
             PollNumbers = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣']
             for i in range(NumberOfOptions):
                 await Poll.add_reaction(PollNumbers[i])
-
-    @commands.command(name="PenguRoll")
-    async def PenguRoll(self, ctx):  # Sends a random image of a penguin
-        path = random.choice(os.listdir("PenguinImages/"))
-        Pengu = discord.File("PenguinImages/" + path)
-        PenguName = "***" + path.replace(".png", "") + "***"
-        await ctx.send(PenguName, file=Pengu)

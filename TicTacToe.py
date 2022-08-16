@@ -292,15 +292,14 @@ class TicTacToe(commands.Cog):
     
     async def TicTacToeVerify(self, ctx):  # Asks if the 2nd player is willing to participate in the match
         try:
-            Player2 = ctx.message.content.lower().replace("x!tictactoe start ", "")
-            Player2 = Player2.mention
+            ctx.message.mentions[0]
         except:
+            Player2 = ctx.message.content.lower().replace("x!tictactoe start ", "")
             await ctx.send(f"{Player2} is not a valid user")
             return
-          
-        self.Players = [ctx.author.mention,Player2]
-        await ctx.send(f"{self.Players[1]}, you have been challanged to a TicTacToe match by {self.Players[0]} accept/reject by ```x!tictactoe accept\nx!tictactoe reject```")
-    
+        
+        self.Players = [ctx.author.mention, ctx.message.mentions[0]]
+        await ctx.send(f"{self.Players[1].mention}, you have been challanged to a TicTacToe match by {self.Players[0]} accept/reject by ```x!tictactoe accept\nx!tictactoe reject```")
     
     async def TicTacToeStart(self, ctx):  # Initializes databases and starts the game
         if (self.GameOngoing):  # Checks if there is an ongoing game already

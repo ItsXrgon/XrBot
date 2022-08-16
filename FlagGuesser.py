@@ -4,18 +4,14 @@ from discord.ext import commands
 import HelpCommands
 import random
 
-  
+
+
 class FlagGuesser(commands.Cog):
     def __init__(self, bot):
         self.bot = bot 
-        self.Answer = ""  # Correct answer
-        self.Choice = 0  # Correct Choice
-        self.GameOngoing = False  # State of game
-        self.Turn = 1  # Turn 
-        self.Score = 0  # Number of correct guesses
-        self.Countries = [] # Countries and Country codes
+        self.games = {}
 
-      
+  
     @commands.command(name="FlagGuesser", aliases=["fg"])
     async def Aliases(self, ctx):
         if ((ctx.message.content).lower().startswith("x!flagguesser start")
@@ -30,48 +26,49 @@ class FlagGuesser(commands.Cog):
         else:
            await HelpCommands.FlagGuesserHelp(ctx)
 
-
+  
     async def FlagGuesserEnd(self, ctx):  # To end current game
-        if (self.GameOngoing):
+        try:
+            self.games[ctx.channel.id]
+        except:
+            await ctx.send("No ongoing FlagGuesser game")
+        else: 
             await ctx.send("FlagGuesser game ended")
-            self.GameOngoing = False
-            FlagGuesser.GameReset(self)
-        else:
-          await ctx.send("No ongoing FlagGuesser game")
+            del self.games[ctx.channel.id]
 
                 
     async def FlagGuesserSend(self, ctx):  # To send the next flag 
-        Country = self.Countries.pop(random.randint(0,len(self.Countries)-1))  # Gets random country
+        Country = self.games[ctx.channel.id].Countries.pop(random.randint(0,len(self.games[ctx.channel.id].Countries)-1))  # Gets random country
         CountryCode = Country[0].lower()  # Saves country code
-        self.Answer = Country[1]  # Save correct country name
+        self.games[ctx.channel.id].Answer = Country[1]  # Save correct country name
         URL = f"https://flagpedia.net/data/flags/w580/{CountryCode}.png"
       
-        Embed = discord.Embed(title=f"Flag #{str(self.Turn)}",
+        Embed = discord.Embed(title=f"Flag #{str(self.games[ctx.channel.id].Turn)}",
                               color=discord.Color.from_rgb(20, 255, 0))
                               
         Embed.set_image(url=URL)
         await ctx.send(embed=Embed)
 
-        RandomCountry_1 = self.Countries[random.randint(0,len(self.Countries))][1]  # Random choice 1
-        RandomCountry_2 = self.Countries[random.randint(0,len(self.Countries))][1]  # Random choice 2
+        RandomCountry_1 = self.games[ctx.channel.id].Countries[random.randint(0,len(self.games[ctx.channel.id].Countries))][1]  # Random choice 1
+        RandomCountry_2 = self.games[ctx.channel.id].Countries[random.randint(0,len(self.games[ctx.channel.id].Countries))][1]  # Random choice 2
       
         while(RandomCountry_1 == RandomCountry_2):  # Making sure Random choice 1 != Random choice 2
-            RandomCountry_2 = self.Countries[random.randint(0,len(self.Countries))][1]
+            RandomCountry_2 = self.games[ctx.channel.id].Countries[random.randint(0,len(self.games[ctx.channel.id].Countries))][1]
         
-        Choices = [self.Answer,RandomCountry_1,RandomCountry_2]  # Randomize the choices
+        Choices = [self.games[ctx.channel.id].Answer,RandomCountry_1,RandomCountry_2]  # Randomize the choices
         Result = "Pick the correct country: x!flagguesser guess [#] or x!fg guess [#]"
       
         for i in range(3):
             Random = random.randint(0,len(Choices)-1)
             Result += f"\n{str(i+1)}- {Choices[Random]}"
-            if(Choices[Random] == self.Answer):
+            if(Choices[Random] == self.games[ctx.channel.id].Answer):
                 self.Choice = i+1  # Correct choice
             Choices.pop(Random)
         await ctx.send(Result)
 
   
     async def FlagGuesserGuess(self, ctx):  # Checks if user guess is correct
-        if(not self.GameOngoing):
+        if(self.games[ctx.channel.id] == None):
             await ctx.send("No ongoing FlagGuesser game")
             return
         if (ctx.message.content.lower().startswith("x!flagguesser guess ")):
@@ -93,27 +90,30 @@ class FlagGuesser(commands.Cog):
             self.Score += 1
         else:
             await ctx.send(f"Wrong guess :(\nCorrect guess was {self.Answer}")
-        self.Turn += 1
+        self.games[ctx.channel.id].Turn += 1
         
-        if(self.Turn == 11):  # If game has reached turn == 11 then it ends
+        if(self.games[ctx.channel.id].Turn == 11):  # If game has reached turn == 11 then it ends
             await ctx.send(f"Your final score is {str(self.Score)}/10!")
-            self.GameOngoing = False
-            FlagGuesser.GameReset(self)
+            del self.games[ctx.channel.id]
         else:
             await FlagGuesser.FlagGuesserSend(self, ctx)
   
-    async def FlagGuesserStart(self, ctx):  # Starts game
-        if (self.GameOngoing):
-            await ctx.send(
-              "Current Flag Guesser ongoing \nx!FlagGuesser end | x!fg end if you wish to end it")
-        else:
-            FlagGuesser.GameReset(self)
-            self.GameOngoing = True
+    async def FlagGuesserStart(self, ctx):  # Starts game     
+        try:
+            self.games[ctx.channel.id]
+        except:
+            self.games[ctx.channel.id] = FlagGuesserGame()
             await ctx.send(
               "Guess country name of the following 10 flags\nx!FlagGuesser end | x!fg end if you wish to end it")
             await FlagGuesser.FlagGuesserSend(self, ctx)
+        else: 
+            await ctx.send(
+              "Current Flag Guesser ongoing \nx!FlagGuesser end | x!fg end if you wish to end it")
 
-    def GameReset(self):  # Resets game 
+
+class FlagGuesserGame:
+    def __init__(self):
+        self.Answer = ""  # Correct answer
         self.Turn = 1  # What turn the game is on
         self.Score = 0  # Number of correct guesses
         self.Choice = 0  # Correct Choice

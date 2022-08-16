@@ -1,14 +1,11 @@
 import discord
 import os
 from MiniCommands import MiniCommands
-from MemoCommands import MemoCommands
 from TicTacToe import TicTacToe
 from FlagGuesser import FlagGuesser
 from HelpCommands import HelpCommands
 from RedditCommands import RedditCommands
 from WebScrapingCommands import WebScrapingCommands
-from MusicCommands import MusicCommands
-from KeepAlive import keep_alive
 from discord.ext import commands
 
 
@@ -34,7 +31,4 @@ Bot.add_cog(RedditCommands(Bot))
 Bot.add_cog(TicTacToe(Bot))
 Bot.add_cog(HelpCommands(Bot))
 
-
-my_secret = os.environ["BotToken"]
-keep_alive()
-Bot.run(my_secret)
+Bot.run(os.getenv("TOKEN")) 

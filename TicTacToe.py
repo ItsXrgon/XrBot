@@ -68,7 +68,7 @@ class TicTacToe(commands.Cog):
                     corrected_x = x + (Col * 100)
                     self.games[ctx.channel.id].pixels[corrected_y][corrected_x] = (255, 255, 255)
             i += 1
-        self.games[ctx.channel.id].TicTacToe[ self.games[ctx.channel.id].Slot-1] = 1
+        self.games[ctx.channel.id].TicTacToe[self.games[ctx.channel.id].Slot-1] = 1
         self.games[ctx.channel.id].Turn += 1
       
       
@@ -174,7 +174,7 @@ class TicTacToe(commands.Cog):
                   or  self.games[ctx.channel.id].Turn == 7 or  self.games[ctx.channel.id].Turn == 9):
                   possible_placements = [2, 4, 6, 8]
                   self.games[ctx.channel.id].Slot = possible_placements[random.randint(0, 3)]
-                  while (self.games[ctx.channel.id].TicTacToe[ self.games[ctx.channel.id].Slot - 1] != 2 and  self.games[ctx.channel.id].TicTacToe[ self.games[ctx.channel.id].Slot - 1] != 1):
+                  while (self.games[ctx.channel.id].TicTacToe[ self.games[ctx.channel.id].Slot - 1] != 2 and  self.games[ctx.channel.id].TicTacToe[self.games[ctx.channel.id].Slot - 1] != 1):
                        self.games[ctx.channel.id].Slot = possible_placements[random.randint(0, 3)]
                     
             # Sequence if Player 1 stared on a corner
@@ -214,7 +214,9 @@ class TicTacToe(commands.Cog):
             TicTacToe.DrawO(self, ctx)
             await TicTacToe.PrintBoard(self, ctx)
             await TicTacToe.VictoryCheck(self, ctx)
-            if( self.games[ctx.channel.id].GameOngoing==False):
+            try:  # Checks if game ended
+                self.games[ctx.channel.id]
+            except:
                 return
             await ctx.send("Your turn " +  self.games[ctx.channel.id].Players[1])
           
@@ -223,11 +225,13 @@ class TicTacToe(commands.Cog):
             TicTacToe.DrawX(self, ctx)
             await TicTacToe.PrintBoard(self, ctx)
             await TicTacToe.VictoryCheck(self, ctx)
-            if( self.games[ctx.channel.id].GameOngoing==False):
+            try:  # Checks if game ended
+                self.games[ctx.channel.id]
+            except:
                 return
             await ctx.send(f"Your turn { self.games[ctx.channel.id].Players[0]}")
           
-        elif(self.games[ctx.channel.id].Turn==9 and  self.games[ctx.channel.id].GameOngoing==True):
+        elif(self.games[ctx.channel.id].Turn==9):
             await ctx.send("Game has ended in a draw")
             await TicTacToe.EndGame(self, ctx)
                                     
@@ -236,9 +240,12 @@ class TicTacToe(commands.Cog):
             TicTacToe.DrawX(self, ctx)
             await TicTacToe.PrintBoard(self, ctx)
             await TicTacToe.VictoryCheck(self, ctx)
-            if( self.games[ctx.channel.id].GameOngoing==False):
+            try:  # Checks if game ended
+                self.games[ctx.channel.id]
+            except:
                 return
-            if( self.games[ctx.channel.id].Turn==9 and  self.games[ctx.channel.id].GameOngoing==True):
+            
+            if(self.games[ctx.channel.id].Turn==9):
                 await ctx.send("Game has ended in a draw")
                 await TicTacToe.EndGame(self, ctx) 
               
@@ -278,12 +285,17 @@ class TicTacToe(commands.Cog):
         if (self.games[ctx.channel.id].Turn == 0):  # Decides the reactionary sequence the bot should choose 
              self.games[ctx.channel.id].StartingSlot =  self.games[ctx.channel.id].Slot
                            
-        if (self.games[ctx.channel.id].GameOngoing):  # If game is ongoing and turn is valid, place the pieces
-            await TicTacToe.TicTacToeBot(self, ctx)
-        else:  # If there is no ongoing game
-            await ctx.send("x!tictactoe start [user] to play vs a friend or x!tictactoe start to play vs『Xrbot』")
-    
-    
+        try:
+          self.games[ctx.channel.id]  # If game is ongoing and turn is valid, place the pieces
+        except:
+          await ctx.send("x!tictactoe start [user] to play vs a friend or x!tictactoe start to play vs『Xrbot』")
+
+        else:
+          await TicTacToe.TicTacToeBot(self, ctx)
+
+
+
+
     async def TicTacToeVerify(self, ctx):  # Asks if the 2nd player is willing to participate in the match
         try:
             ctx.message.mentions[0]
@@ -320,11 +332,11 @@ class TicTacToe(commands.Cog):
 
   
     async def GameOver(self, ctx):
-        if ( self.games[ctx.channel.id].Players != ""):
+        if (self.games[ctx.channel.id].Players != ""):
             if (self.games[ctx.channel.id].Turn % 2 == 0):   # If game is player vs player
-                result =  self.games[ctx.channel.id].Players[0]  # If game ended at even turn number, player 1 wins
+                result = self.games[ctx.channel.id].Players[0]  # If game ended at even turn number, player 1 wins
             else:
-                result =  self.games[ctx.channel.id].Players[1]  # If game ended at odd turn number, player 2 wins
+                result = self.games[ctx.channel.id].Players[1]  # If game ended at odd turn number, player 2 wins
         else:
             if (self.games[ctx.channel.id].Turn % 2 == 1):  # If game ended at even turn number, player 1 wins vs bot
                 result = str(ctx.author)
@@ -343,7 +355,7 @@ class TicTacToe(commands.Cog):
                 elif (self.games[ctx.channel.id].TicTacToe[6] ==  self.games[ctx.channel.id].TicTacToe[7] ==  self.games[ctx.channel.id].TicTacToe[8] != 2):
                     line = 5
                 for i in range(300):
-                     self.games[ctx.channel.id].pixels[300-(50*line)][i] = (255, 255, 255)
+                     self.games[ctx.channel.id].pixels[50*line][i] = (255, 255, 255)
         
             def VerticalVictory(self, ctx):
                 if (self.games[ctx.channel.id].TicTacToe[0] ==  self.games[ctx.channel.id].TicTacToe[3] ==  self.games[ctx.channel.id].TicTacToe[6] != 2):
@@ -353,7 +365,7 @@ class TicTacToe(commands.Cog):
                 elif (self.games[ctx.channel.id].TicTacToe[2] ==  self.games[ctx.channel.id].TicTacToe[5] ==  self.games[ctx.channel.id].TicTacToe[8] != 2):
                     line = 5
                 for i in range(300):
-                     self.games[ctx.channel.id].pixels[i][300-(50*line)] = (255, 255, 255)
+                     self.games[ctx.channel.id].pixels[i][50*line] = (255, 255, 255)
               
             if ((self.games[ctx.channel.id].TicTacToe[0] ==  self.games[ctx.channel.id].TicTacToe[1] ==  self.games[ctx.channel.id].TicTacToe[2] != 2)
                 or (self.games[ctx.channel.id].TicTacToe[3] ==  self.games[ctx.channel.id].TicTacToe[4] ==  self.games[ctx.channel.id].TicTacToe[5] != 2)
@@ -372,8 +384,9 @@ class TicTacToe(commands.Cog):
             elif (self.games[ctx.channel.id].TicTacToe[2] ==  self.games[ctx.channel.id].TicTacToe[4] ==  self.games[ctx.channel.id].TicTacToe[6] != 2):  # Checks if game is over
                 j = 300
                 for i in range(300):
-                    self.games[ctx.channel.id].pixels[j][i] = (255, 255, 255)
                     j-=1
+                    self.games[ctx.channel.id].pixels[j][i] = (255, 255, 255)
+                    
                 await TicTacToe.PrintBoard(self, ctx)
                 await TicTacToe.GameOver(self, ctx)
               
@@ -396,4 +409,5 @@ class TicTacToeGame:
           
         self.TicTacToe = [2,2,2,2,2,2,2,2,2]  # 2 signifies an empty slot, 1 a slot with X and 0 a slot with O
         self.Turn = 0
+        self.Players = ""
         self.StartingSlot = None

@@ -25,15 +25,12 @@ class TicTacToe(commands.Cog):
         elif(ctx.message.content).lower().startswith("x!tictactoe end"):
             await TicTacToe.EndGame(self, ctx)
         elif ((ctx.message.content).lower().startswith("x!tictactoe accept")
-              and (self.games[ctx.channel.id].Players[1] == ctx.author.mention)):
-            await ctx.send("Match accepted!")
-            await TicTacToe.TicTacToeStart(self, ctx)
-        elif ((ctx.message.content).lower().startswith("x!tictactoe reject")
-             and (self.games[ctx.channel.id].Players[1] == ctx.author.mention)):
-            await ctx.send("Match rejected :(")
+              or (ctx.message.content).lower().startswith("x!tictactoe reject")):
+            await TicTacToe.TicTacToeCheck(self, ctx)
         else:
-            await HelpCommands.TicTacToeHelp(ctx)
-    
+            await HelpCommands.HelpCommands.TicTacToeHelp(self, ctx)
+
+  
     async def PrintBoard(self, ctx):  # Sends an image with the current board
         array = np.array( self.games[ctx.channel.id].pixels, dtype=np.uint8)
         new_image = Image.fromarray(array)
@@ -297,6 +294,10 @@ class TicTacToe(commands.Cog):
 
 
     async def TicTacToeVerify(self, ctx):  # Asks if the 2nd player is willing to participate in the match
+        try:  # Checks if there is an ongoing game already
+            self.games[ctx.channel.id]
+        except:
+            self.games[ctx.channel.id] = TicTacToeGame()
         try:
             ctx.message.mentions[0]
         except:
@@ -307,7 +308,22 @@ class TicTacToe(commands.Cog):
         self.games[ctx.channel.id].Players = [ctx.author.mention, ctx.message.mentions[0]]
         await ctx.send(f"{self.games[ctx.channel.id].Players[1].mention}, you have been challanged to a TicTacToe match by { self.games[ctx.channel.id].Players[0]} accept/reject by ```x!tictactoe accept\nx!tictactoe reject```")
     
-    
+
+    async def TicTacToeCheck(self, ctx):
+        try:  # Checks if there is an ongoing game already
+            self.games[ctx.channel.id]
+            self.games[ctx.channel.id].Players[0]
+        except:
+            await ctx.send("No ongoing game request to accept or reject")
+            return
+        if(self.games[ctx.channel.id].Players[0] == ctx.author.mention):
+            await ctx.send("TicTacToe game starting!")
+            await ctx.send(f"You may start 1st {ctx.author.mention} Type x!Tictactoe play [slot #] Starting from slot 1 on top left square to slot 9 on bottom right")
+            await TicTacToe.PrintBoard(self, ctx)
+        else:
+             await ctx.send("No ongoing game request to you")
+
+  
     async def TicTacToeStart(self, ctx):  # Initializes databases and starts the game
 
         try:  # Checks if there is an ongoing game already

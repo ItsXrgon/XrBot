@@ -5,7 +5,6 @@ from discord.ext import commands
 class HelpCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpWjazsIH_jKlNjpzwxKfooH8DbLkon443XA&usqp=CAU"
   
     @commands.command(name="help")
     async def Aliases(self, ctx):
@@ -22,7 +21,7 @@ class HelpCommands(commands.Cog):
                await HelpCommands.RedditHelp(self, ctx)
             else:
                 await HelpCommands.AllHelp(self, ctx)
-
+        
             
     async def AllHelp(self, ctx):
         Embed = discord.Embed(title="All help Commands | " + str(ctx.author),
@@ -49,8 +48,7 @@ class HelpCommands(commands.Cog):
                         value="Shows list of Reddit commands & what they do",
                         inline=False)
       
-        Embed.set_footer(text="『Xrbot』", icon_url=self.Logo)
-    
+        Embed.set_footer(text="『Xrbot』", icon_url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpWjazsIH_jKlNjpzwxKfooH8DbLkon443XA&usqp=CAU")    
         await ctx.channel.send(embed=Embed)
 
   
@@ -67,7 +65,7 @@ class HelpCommands(commands.Cog):
                         value="Shows weather for next 6 hours of [city] in [country]",
                         inline=False)
       
-        Embed.set_footer(text="『Xrbot』", icon_url=self.Logo)
+        Embed.set_footer(text="『Xrbot』", icon_url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpWjazsIH_jKlNjpzwxKfooH8DbLkon443XA&usqp=CAU")
     
         await ctx.channel.send(embed=Embed)
 
@@ -93,8 +91,8 @@ class HelpCommands(commands.Cog):
                         value="Shows all memos",
                         inline=False)
     
-        Embed.set_footer(text="『Xrbot』", icon_url=self.Logo)
-    
+        Embed.set_footer(text="『Xrbot』", icon_url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpWjazsIH_jKlNjpzwxKfooH8DbLkon443XA&usqp=CAU")    
+      
         await ctx.channel.send(embed=Embed)
     
     
@@ -123,7 +121,7 @@ class HelpCommands(commands.Cog):
                         value="Sends a reaction poll message (Max options are 9)",
                         inline=False)
       
-        Embed.set_footer(text="『Xrbot』", icon_url=self.Logo)
+        Embed.set_footer(text="『Xrbot』", icon_url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpWjazsIH_jKlNjpzwxKfooH8DbLkon443XA&usqp=CAU")    
       
         await ctx.channel.send(embed=Embed)
     
@@ -145,7 +143,7 @@ class HelpCommands(commands.Cog):
                         value="Ends the ongoing game of FlagGuesser",
                         inline=False)
     
-        Embed.set_footer(text="『Xrbot』", icon_url=self.Logo)
+        Embed.set_footer(text="『Xrbot』", icon_url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpWjazsIH_jKlNjpzwxKfooH8DbLkon443XA&usqp=CAU")    
       
         await ctx.channel.send(embed=Embed)
     
@@ -175,7 +173,7 @@ class HelpCommands(commands.Cog):
                         value="Ends ongoing TicTacToe match",
                         inline=False)
     
-        Embed.set_footer(text="『Xrbot』", icon_url=self.Logo)
+        Embed.set_footer(text="『Xrbot』", icon_url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpWjazsIH_jKlNjpzwxKfooH8DbLkon443XA&usqp=CAU")    
       
         await ctx.channel.send(embed=Embed)
     
@@ -197,6 +195,6 @@ class HelpCommands(commands.Cog):
                         value="Shows [Post #] in [Category] of [Subreddit]",
                         inline=False)
     
-        Embed.set_footer(text="『Xrbot』", icon_url=self.Logo)
+        Embed.set_footer(text="『Xrbot』", icon_url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpWjazsIH_jKlNjpzwxKfooH8DbLkon443XA&usqp=CAU")    
       
         await ctx.channel.send(embed=Embed)

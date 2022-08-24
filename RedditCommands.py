@@ -29,7 +29,7 @@ class RedditCommands(commands.Cog):
           elif(ctx.message.content).lower().startswith("x!reddit "):
                await RedditCommands.TopPost(self, ctx)
           else:
-               await HelpCommands.RedditHelp(self, ctx)
+               await HelpCommands.HelpCommands.RedditHelp(self, ctx)
 
           
     async def TopPost(self, ctx):  # Shows post in category & subreddit decided by user

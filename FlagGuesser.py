@@ -24,7 +24,7 @@ class FlagGuesser(commands.Cog):
         or (ctx.message.content).lower().startswith("x!fg guess ")):
            await FlagGuesser.FlagGuesserGuess(self, ctx)
         else:
-           await HelpCommands.FlagGuesserHelp(ctx)
+           await HelpCommands.HelpCommands.FlagGuesserHelp(self, ctx)
 
   
     async def FlagGuesserEnd(self, ctx):  # To end current game
@@ -49,8 +49,8 @@ class FlagGuesser(commands.Cog):
         Embed.set_image(url=URL)
         await ctx.send(embed=Embed)
 
-        RandomCountry_1 = self.games[ctx.channel.id].Countries[random.randint(0,len(self.games[ctx.channel.id].Countries))][1]  # Random choice 1
-        RandomCountry_2 = self.games[ctx.channel.id].Countries[random.randint(0,len(self.games[ctx.channel.id].Countries))][1]  # Random choice 2
+        RandomCountry_1 = self.games[ctx.channel.id].Countries[random.randint(0,len(self.games[ctx.channel.id].Countries)-1)][1]  # Random choice 1
+        RandomCountry_2 = self.games[ctx.channel.id].Countries[random.randint(0,len(self.games[ctx.channel.id].Countries)-1)][1]  # Random choice 2
       
         while(RandomCountry_1 == RandomCountry_2):  # Making sure Random choice 1 != Random choice 2
             RandomCountry_2 = self.games[ctx.channel.id].Countries[random.randint(0,len(self.games[ctx.channel.id].Countries))][1]
@@ -62,7 +62,7 @@ class FlagGuesser(commands.Cog):
             Random = random.randint(0,len(Choices)-1)
             Result += f"\n{str(i+1)}- {Choices[Random]}"
             if(Choices[Random] == self.games[ctx.channel.id].Answer):
-                self.Choice = i+1  # Correct choice
+                self.games[ctx.channel.id].Choice = i+1  # Correct choice
             Choices.pop(Random)
         await ctx.send(Result)
 
@@ -85,15 +85,15 @@ class FlagGuesser(commands.Cog):
         if(UserGuess>3):
             await ctx.send("Incorrect format\nx!flagguesser guess [Guess number] | x!fg guess [Guess number]")
           
-        if (UserGuess == self.Choice):
+        if (UserGuess == self.games[ctx.channel.id].Choice):
             await ctx.send("Correct guess, +1 points")
-            self.Score += 1
+            self.games[ctx.channel.id].Score += 1
         else:
-            await ctx.send(f"Wrong guess :(\nCorrect guess was {self.Answer}")
+            await ctx.send(f"Wrong guess :(\nCorrect guess was {self.games[ctx.channel.id].Answer}")
         self.games[ctx.channel.id].Turn += 1
         
         if(self.games[ctx.channel.id].Turn == 11):  # If game has reached turn == 11 then it ends
-            await ctx.send(f"Your final score is {str(self.Score)}/10!")
+            await ctx.send(f"Your final score is {str(self.games[ctx.channel.id].Score)}/10!")
             del self.games[ctx.channel.id]
         else:
             await FlagGuesser.FlagGuesserSend(self, ctx)

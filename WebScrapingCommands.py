@@ -19,7 +19,7 @@ class WebScrapingCommands(commands.Cog):
         elif(ctx.message.content).lower().startswith("x!get lyrics "):
             await WebScrapingCommands.GetLyrics(self, ctx)        
         else:
-            await HelpCommands.GetHelp(ctx) 
+            await HelpCommands.HelpCommands.GetHelp(ctx) 
 
     
     async def GetLyrics(self, ctx):  # Gets lyrics of song   

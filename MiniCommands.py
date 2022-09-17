@@ -78,3 +78,35 @@ class MiniCommands(commands.Cog):
             PollNumbers = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣']
             for i in range(NumberOfOptions):
                 await Poll.add_reaction(PollNumbers[i])
+
+    @commands.command(name="move")
+    async def moveChat(self, ctx):
+        try:
+          messageNumber, channel = ctx.message.content.replace("x!move ", "").split()
+          channel = self.bot.get_channel(int(channel.replace("<#","").replace(">","")))
+          messages = await ctx.channel.history(limit=int(messageNumber)+1).flatten()
+        except:
+          await ctx.send("Incorrect format, do x!move [num] [channel]")
+          return
+
+        print(messages)
+        i = len(messages)-1
+        while(i>0):
+          message = messages[i]
+          i-=1
+          await channel.send(f"{message.author.name}: {message.content}")
+          j = 0
+          while(j < len(message.attachments)):
+            await channel.send(message.attachments[j].url)
+            j += 1
+        await ctx.channel.purge(limit=int(len(messages))+1)
+      
+    @commands.command(name="purge")
+    async def purge(self, ctx):
+        limit = ctx.message.content.split()[1]
+        try:
+          int(limit)
+        except:
+          await ctx.send("Incorrect format, do x!purge [number of messages]")
+          return
+        await ctx.channel.purge(limit=int(limit)+1)

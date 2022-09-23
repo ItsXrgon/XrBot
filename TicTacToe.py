@@ -13,7 +13,6 @@ class TicTacToe(commands.Cog):
          self.bot = bot 
          self.games = {}
 
-
     @commands.command(name="tictactoe")
     async def Aliases(self, ctx):
         if (ctx.message.content).lower().startswith("x!tictactoe start "):
@@ -25,7 +24,7 @@ class TicTacToe(commands.Cog):
         elif(ctx.message.content).lower().startswith("x!tictactoe end"):
             await TicTacToe.EndGame(self, ctx)
         elif ((ctx.message.content).lower().startswith("x!tictactoe accept")
-              or (ctx.message.content).lower().startswith("x!tictactoe reject")):
+          or (ctx.message.content).lower().startswith("x!tictactoe reject")):
             await TicTacToe.TicTacToeCheck(self, ctx)
         else:
             await HelpCommands.HelpCommands.TicTacToeHelp(self, ctx)
@@ -91,7 +90,7 @@ class TicTacToe(commands.Cog):
                     self.games[ctx.channel.id].pixels[corrected_y][corrected_x] = (255, 255, 255)
         self.games[ctx.channel.id].TicTacToe[ self.games[ctx.channel.id].Slot-1] = 0
         self.games[ctx.channel.id].Turn += 1
-      
+
     
     async def BotTurn(self, ctx):  # Analyzes current board and pics best possible move
         # Checks if an immediate win is possible over the need for a block
@@ -255,24 +254,24 @@ class TicTacToe(commands.Cog):
     # Gets slot number from message, verifies turn & keeps passing turns till the game ends
         if (self.games[ctx.channel.id].Players != ""):  # If True then game is player vs player
             if (self.games[ctx.channel.id].Turn % 2 == 0):  # Player 2"s turn
-                if (ctx.author.mention != str( self.games[ctx.channel.id].Players[1])):  # Checks if command came from player 2
+                if (ctx.author.mention != self.games[ctx.channel.id].Players[1].mention):  # Checks if command came from player 2
                     await ctx.send("Not your turn yet!")
                     return
                   
             elif (self.games[ctx.channel.id].Turn % 2 == 1):  # Player 1"s turn
-                if (ctx.author.mention != str( self.games[ctx.channel.id].Players[0])):  # Checks if command came from player 1
+                if (ctx.author.mention != self.games[ctx.channel.id].Players[0].mention):  # Checks if command came from player 1
                     await ctx.send("Not your turn yet!")
                     return
                   
         self.games[ctx.channel.id].Slot = ctx.message.content.lower().split("x!tictactoe play ")[1]
         try:  # Checks input is an integer and not a string
-            self.games[ctx.channel.id].Slot = int( self.games[ctx.channel.id].Slot)
+            self.games[ctx.channel.id].Slot = int(self.games[ctx.channel.id].Slot)
         except:
             await ctx.send("Incorrect format\nx!tictactoe play [slot #]")
             return
           
         if(self.games[ctx.channel.id].Slot<1 or  self.games[ctx.channel.id].Slot>9):
-            await ctx.send("Incorrect format\nx!tictactoe play [slot #]")
+            await ctx.send("Slot # out of range")
             return
               
         if (self.games[ctx.channel.id].TicTacToe[ self.games[ctx.channel.id].Slot - 1] != 2):
@@ -291,8 +290,6 @@ class TicTacToe(commands.Cog):
           await TicTacToe.TicTacToeBot(self, ctx)
 
 
-
-
     async def TicTacToeVerify(self, ctx):  # Asks if the 2nd player is willing to participate in the match
         try:  # Checks if there is an ongoing game already
             self.games[ctx.channel.id]
@@ -302,10 +299,10 @@ class TicTacToe(commands.Cog):
             ctx.message.mentions[0]
         except:
             Player2 = ctx.message.content.lower().replace("x!tictactoe start ", "")
-            await ctx.send(f"{Player2} is mot a valid user")
+            await ctx.send(f"{Player2} is not a valid user")
             return
         
-        self.games[ctx.channel.id].Players = [ctx.author.mention, ctx.message.mentions[0]]
+        self.games[ctx.channel.id].Players = [ctx.author, ctx.message.mentions[0]]
         await ctx.send(f"{self.games[ctx.channel.id].Players[1].mention}, you have been challanged to a TicTacToe match by { self.games[ctx.channel.id].Players[0]} accept/reject by ```x!tictactoe accept\nx!tictactoe reject```")
     
 
@@ -316,7 +313,7 @@ class TicTacToe(commands.Cog):
         except:
             await ctx.send("No ongoing game request to accept or reject")
             return
-        if(self.games[ctx.channel.id].Players[0] == ctx.author.mention):
+        if(self.games[ctx.channel.id].Players[1].mention == ctx.author.mention):
             await ctx.send("TicTacToe game starting!")
             await ctx.send(f"You may start 1st {ctx.author.mention} Type x!Tictactoe play [slot #] Starting from slot 1 on top left square to slot 9 on bottom right")
             await TicTacToe.PrintBoard(self, ctx)

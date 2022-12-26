@@ -9,11 +9,11 @@ from cogs.HelpCommands import HelpCommands
 class RedditCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.Reddit = praw.Reddit(client_id="7I8sxZgg68S2gLIwTNY1kw",
-                         client_secret="FlHYr1vH0MjdsL4IDInDB4kWawvrmA",
+        self.Reddit = praw.Reddit(client_id="YOUR CLIENT ID",
+                         client_secret="YOUR CLIENT SECRET",
                          user_agent="redditdev scraper by u/Xron-_-",
                          username="Xrbot-_-",
-                         password="XrbotXrbot",
+                         password="YOUR PASSWORD",
                          check_for_async=False)
         self.Thumbnail ="https://static.vecteezy.com/system/resources/thumbnails/008/385/732/small/reddit-social-media-icon-logo-abstract-symbol-illustration-free-vector.jpg"
         self.Logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpWjazsIH_jKlNjpzwxKfooH8DbLkon443XA&usqp=CAU"

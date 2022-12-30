@@ -25,17 +25,17 @@ class MiniCommands(commands.Cog):
         except:
             await ctx.send("Incorrect format\nx!random [Num1] [Num2]")
             return
-      
-        if (number1 > number2):
-            Max = number1
-            Min = number2
-        else:
-            Max = number2
-            Min = number1
+          
+        Max = Num_2
+        Min = Num_1
+        if (Num_1 > Num_2):
+            Max = Num_1
+            Min = Num_2
+          
         Random = str(random.randint(Min, Max))
         Result = f"Random number between {Min} & {Max} is {Random}"
 
-        await interaction.response.send_message(Result)
+        await ctx.send(Result)
 
     @commands.command(name="cf")
     async def CoinFlip(self, ctx):  # Flips a coin

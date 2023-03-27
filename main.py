@@ -47,14 +47,6 @@ async def test(ctx: commands.Context):
 class autoresponse(commands.Cog):
     def __init__(self, Bot):
         self.bot = Bot
-
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        if(str(message.author)=="『Xrgon』#7135"):            
-          emoji = discord.utils.get(message.guild.emojis, name="nerdbob")
-          await message.add_reaction(emoji)
-  
-#
       
 my_secret = os.environ["BotToken"]
 keep_alive()

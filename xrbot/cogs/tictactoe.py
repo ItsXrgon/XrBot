@@ -5,7 +5,7 @@ from PIL import Image
 import random
 import numpy as np
 from discord.ext import commands
-from cogs.HelpCommands import HelpCommands
+from xrbot.cogs.help import HelpCommands
 
 
 class TicTacToe(commands.Cog):
@@ -15,7 +15,7 @@ class TicTacToe(commands.Cog):
         self.game = ""
 
     @commands.command(name="tictactoe")
-    async def Aliases(self, ctx):
+    async def aliases(self, ctx):
         if (ctx.message.content).lower().startswith("x!tictactoe start "):
             await TicTacToe.TicTacToeVerify(self, ctx)
         elif (ctx.message.content).lower().startswith("x!tictactoe start"):
